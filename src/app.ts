@@ -1,10 +1,15 @@
-import express from 'express';
+import * as hubspot from '@hubspot/api-client';
+import * as dotenv from 'dotenv';
 
-const app = express();
-const port = 3000;
+dotenv.config();
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+const hubspotClient = new hubspot.Client({ apiKey: process.env.CRM_API_KEY });
 
-app.listen(port, () => console.log(`Express is listening at http://localhost:${port}`));
+(async () => {
+  try {
+    const res = await hubspotClient.crm.companies.getAll();
+    console.log(res);
+  } catch (e) {
+    console.error(JSON.stringify(e, null, 2));
+  }
+})();
